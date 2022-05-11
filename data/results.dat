@@ -1,0 +1,4 @@
+time ego_vel ego_acc ego_acc_setpoint dist_to_target_veh
+0 13.8889 0 0 100
+0.1 13.8889 0 0 99.7222 
+0.2 13.8889 0 0 99.4444
