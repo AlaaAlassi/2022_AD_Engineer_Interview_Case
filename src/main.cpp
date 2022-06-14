@@ -43,6 +43,17 @@ int main() {
   // prepare the logger
   logger loggerObject("data/results.dat");
 
+  //controller parameters
+  float time_gap_limit = 2;
+  float min_distance = 2;
+  float kp=1;
+  bool cc = true;
+  float vel_command = 0;
+  float kp_ac = 3;
+
+  // controller input
+  float acceleration_setpoint = 0;
+
   // Simulate driving scenario
   size_t number_of_steps = std::floor(max_time / time_step_length);
   for (int step = 0; step < number_of_steps; ++step) {
@@ -62,7 +73,43 @@ int main() {
     // - target_vehicle_velocity
     // - set_velocity_driver
     //================================================================
-    float acceleration_setpoint = 0.0;  // Placeholder
+    float time_gap = target_vehicle_distance / ego_vehicle.velocity();
+    float safe_distance = min_distance + time_gap_limit * ego_vehicle.velocity();
+    float distance_control_action = kp * (-target_vehicle_distance + safe_distance) / time_step_length;
+    float vel_reference = 0.1*(target_vehicle_velocity - distance_control_action);
+    if (target_vehicle_distance < safe_distance)
+    {
+      // check velocity condition
+      if (ego_vehicle.velocity() < set_velocity_driver)
+      {
+        cc = false;
+      }
+      else
+      {
+        cc = true;
+      }
+    }
+    else
+    {
+      // chose cc
+      cc = true;
+    }
+
+    if(cc == false){
+      vel_command= vel_reference;
+    }else{
+      vel_command= set_velocity_driver;
+    }
+
+    acceleration_setpoint = kp_ac*(vel_command - ego_vehicle.velocity());  // Placeholder
+
+    if(acceleration_setpoint > 5){
+      acceleration_setpoint = 5;
+    }
+    if(acceleration_setpoint < -5){
+      acceleration_setpoint = -5;
+    }
+
 
     // Print to console for debugging
     float time = step*time_step_length;
@@ -70,6 +117,7 @@ int main() {
     cout << "   ego_vel " << ego_vehicle.velocity();
     cout << "   ego_acc " << ego_vehicle.acceleration();
     cout << "   ego_acc_setpoint " << acceleration_setpoint;
+    cout << "   cc " << cc;
     cout << "   dist_to_target_veh " << target_vehicle_distance << endl;
 
     //call logger
