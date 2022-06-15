@@ -18,13 +18,6 @@ public:
         ofs.close();
     }
 
-    void log(float val1,float val2,float val3,float val4,float val5)
-    {
-        ofstream ofs(file_path_.c_str(), ios_base::out | ios_base::app);
-        ofs << val1 << ' ' << val2<< ' ' << val3<< ' ' << val4<< ' ' << val5 << '\n';
-        ofs.close();
-    }
-
     void log(string name, float value){
         if(logged_data_.count(name) == 0){
             signals_name.push_back(name);
