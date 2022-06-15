@@ -72,7 +72,7 @@ int main() {
     // - target_vehicle_distance
     // - target_vehicle_velocity
     // - set_velocity_driver
-    //================================================================
+
     float time_gap = target_vehicle_distance / ego_vehicle.velocity();
     float safe_distance = min_distance + time_gap_limit * ego_vehicle.velocity();
     float distance_control_action = kp * (-target_vehicle_distance + safe_distance) / time_step_length;
@@ -122,6 +122,8 @@ int main() {
 
     //call logger
     loggerObject.log(time,ego_vehicle.velocity(),ego_vehicle.acceleration(),acceleration_setpoint,target_vehicle_distance);
+
+    //================================================================
 
     // Update ego vehicle motion by one time step
     ego_vehicle.UpdateMotion(acceleration_setpoint);
