@@ -66,6 +66,7 @@ public:
             }
             ofs.close();
         }
+        cout << "Data saved to: " << file_path_ <<'\n';
     }
 
 private:

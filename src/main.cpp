@@ -12,29 +12,32 @@
 
 using namespace std;
 
-int main() {
+int main()
+{
   // General parameters
-  const float time_step_length = 0.1;            // (s)
-  const float max_time = 80;                     // (s)
-  const float set_velocity_driver = 70.0 / 3.6;  // (m/s)
+  const float time_step_length = 0.1;           // (s)
+  const float max_time = 80;                    // (s)
+  const float set_velocity_driver = 70.0 / 3.6; // (m/s)
 
   // Create longitudinal ego vehicle object
-  const float initial_ego_travel_distance = 0.0;  // (m)
-  const float initial_ego_velocity = 50.0 / 3.6;  // (m/s)
-  const float initial_ego_acceleration = 0.0;     // (m/s^2)
+  const float initial_ego_travel_distance = 0.0; // (m)
+  const float initial_ego_velocity = 50.0 / 3.6; // (m/s)
+  const float initial_ego_acceleration = 0.0;    // (m/s^2)
   VehicleLongitudinalModel ego_vehicle(initial_ego_travel_distance,
                                        initial_ego_velocity,
                                        initial_ego_acceleration);
 
   // Load target vehicle data
-  std::vector<float> target_vehicle_travel_distances;  // (m)
-  std::vector<float> target_vehicle_velocities;        // (m/s)
+  std::vector<float> target_vehicle_travel_distances; // (m)
+  std::vector<float> target_vehicle_velocities;       // (m/s)
   std::ifstream fin("data/target_vehicle_travel_dist_vel.dat");
-  if (fin.fail()) {
+  if (fin.fail())
+  {
     throw std::runtime_error("Could not open file.");
   }
   float travel_distance, velocity;
-  while (fin >> travel_distance) {
+  while (fin >> travel_distance)
+  {
     target_vehicle_travel_distances.push_back(travel_distance);
     fin >> velocity;
     target_vehicle_velocities.push_back(velocity);
@@ -43,11 +46,11 @@ int main() {
   // prepare the logger
   logger loggerObject("data/results.dat");
 
-  //controller parameters
+  // controller parameters
   float time_gap_limit = 2;
   float min_distance = 2;
-  float kp=1;
-  bool  cruise_control_enabled = true;
+  float kp = 1;
+  bool cruise_control_enabled = true;
   float vel_command = 0;
   float kp_ac = 3;
 
@@ -56,7 +59,8 @@ int main() {
 
   // Simulate driving scenario
   size_t number_of_steps = std::floor(max_time / time_step_length);
-  for (int step = 0; step < number_of_steps; ++step) {
+  for (int step = 0; step < number_of_steps; ++step)
+  {
     // Update target vehicle data
     float target_vehicle_travel_distance =
         target_vehicle_travel_distances[step];
@@ -103,34 +107,26 @@ int main() {
       vel_command = vel_reference;
     }
 
-    acceleration_setpoint = kp_ac*(vel_command - ego_vehicle.velocity());
+    acceleration_setpoint = kp_ac * (vel_command - ego_vehicle.velocity());
 
-    if(acceleration_setpoint > 5){
+    if (acceleration_setpoint > 5)
+    {
       acceleration_setpoint = 5;
     }
-    if(acceleration_setpoint < -5){
+    if (acceleration_setpoint < -5)
+    {
       acceleration_setpoint = -5;
     }
 
-
     // Print to console for debugging
-    float time = step*time_step_length;
-    /*cout << "time " << step*time_step_length;
-    cout << "   ego_vel " << ego_vehicle.velocity();
-    cout << "   ego_acc " << ego_vehicle.acceleration();
-    cout << "   ego_acc_setpoint " << acceleration_setpoint;
-    cout << "   cc " << cruise_control_enabled;
-    cout << "   dist_to_target_veh " << target_vehicle_distance << endl;*/
+    float time = step * time_step_length;
 
-    //call logger
-    //loggerObject.log(time,ego_vehicle.velocity(),ego_vehicle.acceleration(),acceleration_setpoint,target_vehicle_distance);
+    // call logger
     loggerObject.log("time", time);
     loggerObject.log("ego_vel", ego_vehicle.velocity());
     loggerObject.log("ego_acc", ego_vehicle.acceleration());
     loggerObject.log("ego_acc_setpoint", acceleration_setpoint);
     loggerObject.log("dist_to_target_veh", target_vehicle_distance);
-
-
     //================================================================
 
     // Update ego vehicle motion by one time step
