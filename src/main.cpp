@@ -76,7 +76,7 @@ int main() {
     float time_gap = target_vehicle_distance / ego_vehicle.velocity();
     float safe_distance = min_distance + time_gap_limit * ego_vehicle.velocity();
     float distance_control_action = kp * (-target_vehicle_distance + safe_distance) / time_step_length;
-    float vel_reference = 0.1*(target_vehicle_velocity - distance_control_action);
+    float vel_reference = target_vehicle_velocity - distance_control_action;
     if (target_vehicle_distance < safe_distance)
     {
       // check velocity condition
