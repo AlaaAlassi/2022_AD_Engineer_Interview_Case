@@ -49,24 +49,28 @@ public:
             ofs.close();
         }
 
-        for (int i = 0; i < logged_data_[signals_name[0]].size(); i++)
-        {
-            ofstream ofs(file_path_.c_str(), ios_base::out | ios_base::app);
-            for (int j = 0; j < signals_name.size(); j++)
+        if(!signals_name.empty()){
+            for (int i = 0; i < logged_data_[signals_name[0]].size(); i++)
             {
-                ofs << logged_data_[signals_name.at(j)].at(i);
-                if (j == signals_name.size() - 1)
+                ofstream ofs(file_path_.c_str(), ios_base::out | ios_base::app);
+                for (int j = 0; j < signals_name.size(); j++)
                 {
-                    ofs << '\n';
+                    ofs << logged_data_[signals_name.at(j)].at(i);
+                    if (j == signals_name.size() - 1)
+                    {
+                        ofs << '\n';
+                    }
+                    else
+                    {
+                        ofs << ' ';
+                    }
                 }
-                else
-                {
-                    ofs << ' ';
-                }
+                ofs.close();
             }
-            ofs.close();
+            cout << "Data saved to: " << file_path_ <<'\n';
+        }else{
+            cout << "No signals were logged " <<'\n';
         }
-        cout << "Data saved to: " << file_path_ <<'\n';
     }
 
 private:
