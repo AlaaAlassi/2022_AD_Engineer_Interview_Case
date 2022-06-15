@@ -115,21 +115,29 @@ int main() {
 
     // Print to console for debugging
     float time = step*time_step_length;
-    cout << "time " << step*time_step_length;
+    /*cout << "time " << step*time_step_length;
     cout << "   ego_vel " << ego_vehicle.velocity();
     cout << "   ego_acc " << ego_vehicle.acceleration();
     cout << "   ego_acc_setpoint " << acceleration_setpoint;
     cout << "   cc " << cruise_control_enabled;
-    cout << "   dist_to_target_veh " << target_vehicle_distance << endl;
+    cout << "   dist_to_target_veh " << target_vehicle_distance << endl;*/
 
     //call logger
-    loggerObject.log(time,ego_vehicle.velocity(),ego_vehicle.acceleration(),acceleration_setpoint,target_vehicle_distance);
+    //loggerObject.log(time,ego_vehicle.velocity(),ego_vehicle.acceleration(),acceleration_setpoint,target_vehicle_distance);
+    loggerObject.log("time", time);
+    loggerObject.log("ego_vel", ego_vehicle.velocity());
+    loggerObject.log("ego_acc", ego_vehicle.acceleration());
+    loggerObject.log("ego_acc_setpoint", acceleration_setpoint);
+    loggerObject.log("dist_to_target_veh", target_vehicle_distance);
+
 
     //================================================================
 
     // Update ego vehicle motion by one time step
     ego_vehicle.UpdateMotion(acceleration_setpoint);
   }
+
+  loggerObject.saveLoggedData();
 
   return 0;
 }
