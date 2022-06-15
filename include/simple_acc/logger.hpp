@@ -12,19 +12,36 @@ using namespace std;
 class logger
 {
 public:
-    logger(string filePath) : file_path_(filePath)
+    /**
+     * @brief Constructs a new logger object and creat a .dat
+     * or clear the content if a file with the same name exists
+     *
+     * @param[in] file_path       Relative path to the file
+     * were data will be logged to file
+     */
+    logger(string file_path) : file_path_(file_path)
     {
-        ofstream ofs(filePath.c_str(), ios_base::out | ios_base::trunc);
+        ofstream ofs(file_path_.c_str(), ios_base::out | ios_base::trunc);
         ofs.close();
     }
-
-    void log(string name, float value){
-        if(logged_data_.count(name) == 0){
+    /**
+     * @brief Log data as key-value pair, where the key
+     * is the name of the signal.
+     *
+     * @param[in] name       The name of the logged signal
+     * @param[in] value      The value of the logged signal
+     */
+    void log(string name, float value)
+    {
+        if (logged_data_.count(name) == 0)
+        {
             signals_name.push_back(name);
         }
         logged_data_[name].push_back(value);
     }
-
+    /**
+     * @brief Save the logged data
+     */
     void saveLoggedData()
     {
         for (int j = 0; j < signals_name.size(); j++)
@@ -42,7 +59,8 @@ public:
             ofs.close();
         }
 
-        if(!signals_name.empty()){
+        if (!signals_name.empty())
+        {
             for (int i = 0; i < logged_data_[signals_name[0]].size(); i++)
             {
                 ofstream ofs(file_path_.c_str(), ios_base::out | ios_base::app);
@@ -60,9 +78,11 @@ public:
                 }
                 ofs.close();
             }
-            cout << "Data saved to: " << file_path_ <<'\n';
-        }else{
-            cout << "No signals were logged " <<'\n';
+            cout << "Data saved to: " << file_path_ << '\n';
+        }
+        else
+        {
+            cout << "No signals were logged " << '\n';
         }
     }
 
