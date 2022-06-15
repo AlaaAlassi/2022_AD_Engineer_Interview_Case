@@ -52,7 +52,7 @@ int main()
   float kp = 1;
   bool cruise_control_enabled = true;
   float vel_command = 0;
-  float kp_ac = 3;
+  float kp_ac = 0.3;
 
   // controller input
   float acceleration_setpoint = 0;
