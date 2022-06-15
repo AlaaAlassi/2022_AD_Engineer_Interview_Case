@@ -5,6 +5,12 @@
 
 Describe what you did here.
 
+1- I impleented an Adaptive Cruise Controller as described in figure.1 in [1] without
+implementing the "Innerloop", instead, I mapped the velocity error signal to the accelration setpoint.
+
+2- I tunned the gain "kp_ac" to get a smooth velocity profile, this caused a mild
+overshoot for the 2 [m] safety distance limit.
+
 There is no need to repeat the description for what it should do that you have
 received again here.
 
@@ -16,11 +22,15 @@ received again here.
 
   Otherwise you can include an image with this line:
 
-  ![Some image](doc/a.png)
+  ![Some image](doc/controller.png)
 -->
 
 @section remarks Remarks and suggestions
 
 Any remarks, suggestions or things that you like to point out?
+I would consider using a PID controller in the velocity loop since the D-action will dampen the oscillation in the ego_vel signal
+and the integral action will elemniate the steady sate error.
 
+@section References
+[1] Shakouri P, Czeczot J, Ordys A. Adaptive cruise control system using balance-based adaptive control technique. In2012 17th International Conference on Methods & Models in Automation & Robotics (MMAR) 2012 Aug 27 (pp. 510-515). IEEE.
 */
