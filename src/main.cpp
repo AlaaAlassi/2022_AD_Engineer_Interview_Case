@@ -47,7 +47,7 @@ int main() {
   float time_gap_limit = 2;
   float min_distance = 2;
   float kp=1;
-  bool cc = true;
+  bool  cruise_control_enabled = true;
   float vel_command = 0;
   float kp_ac = 3;
 
@@ -77,31 +77,33 @@ int main() {
     float safe_distance = min_distance + time_gap_limit * ego_vehicle.velocity();
     float distance_control_action = kp * (-target_vehicle_distance + safe_distance) / time_step_length;
     float vel_reference = target_vehicle_velocity - distance_control_action;
+
     if (target_vehicle_distance < safe_distance)
     {
-      // check velocity condition
       if (ego_vehicle.velocity() < set_velocity_driver)
       {
-        cc = false;
+        cruise_control_enabled = false;
       }
       else
       {
-        cc = true;
+        cruise_control_enabled = true;
       }
     }
     else
     {
-      // chose cc
-      cc = true;
+      cruise_control_enabled = true;
     }
 
-    if(cc == false){
-      vel_command= vel_reference;
-    }else{
-      vel_command= set_velocity_driver;
+    if (cruise_control_enabled)
+    {
+      vel_command = set_velocity_driver;
+    }
+    else
+    {
+      vel_command = vel_reference;
     }
 
-    acceleration_setpoint = kp_ac*(vel_command - ego_vehicle.velocity());  // Placeholder
+    acceleration_setpoint = kp_ac*(vel_command - ego_vehicle.velocity());
 
     if(acceleration_setpoint > 5){
       acceleration_setpoint = 5;
@@ -117,7 +119,7 @@ int main() {
     cout << "   ego_vel " << ego_vehicle.velocity();
     cout << "   ego_acc " << ego_vehicle.acceleration();
     cout << "   ego_acc_setpoint " << acceleration_setpoint;
-    cout << "   cc " << cc;
+    cout << "   cc " << cruise_control_enabled;
     cout << "   dist_to_target_veh " << target_vehicle_distance << endl;
 
     //call logger
