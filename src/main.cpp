@@ -79,7 +79,7 @@ int main()
 
     float time_gap = target_vehicle_distance / ego_vehicle.velocity();
     float safe_distance = min_distance + time_gap_limit * ego_vehicle.velocity();
-    float distance_control_action = kp * (-target_vehicle_distance + safe_distance) / time_step_length;
+    float distance_control_action = kp * (ego_vehicle.velocity() - target_vehicle_velocity); //(-target_vehicle_distance + safe_distance) / time_step_length
     float vel_reference = target_vehicle_velocity - distance_control_action;
 
     if (target_vehicle_distance < safe_distance)
@@ -127,6 +127,8 @@ int main()
     loggerObject.log("ego_acc", ego_vehicle.acceleration());
     loggerObject.log("ego_acc_setpoint", acceleration_setpoint);
     loggerObject.log("dist_to_target_veh", target_vehicle_distance);
+    loggerObject.log("set_velocity_driver", set_velocity_driver);
+    loggerObject.log("cruise_control_enabled", cruise_control_enabled);
     //================================================================
 
     // Update ego vehicle motion by one time step
