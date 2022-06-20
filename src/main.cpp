@@ -84,7 +84,7 @@ int main()
 
     if (target_vehicle_distance < safe_distance)
     {
-      if (ego_vehicle.velocity() < set_velocity_driver)
+      if (ego_vehicle.velocity() <= set_velocity_driver)
       {
         cruise_control_enabled = false;
       }
